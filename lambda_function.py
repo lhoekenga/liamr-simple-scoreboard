@@ -1,3 +1,4 @@
+import os
 import boto3
 from pathlib import Path
 
@@ -6,7 +7,7 @@ template_html = (Path(__file__).parent / "template.html").read_text()
 
 # Connect to DynamoDB.
 dynamodb = boto3.resource("dynamodb")
-table = dynamodb.Table("liamr-simple-scoreboard")
+table = os.environ['DYNAMODB_TABLE_NAME']
 
 def lambda_handler(event, context):
     # Display the scores in table format.
