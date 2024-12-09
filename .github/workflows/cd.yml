@@ -12,6 +12,10 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      TF_VAR_STACK_NAME: liamr-scoreboard
+      TF_VAR_TAGS_ALL: |
+        {"Environment": "Development", "Service": "Scorekeeping"}
     steps:
       # Build the deployment package.
       - uses: actions/checkout@v4
@@ -33,9 +37,5 @@ jobs:
       - run: tofu validate -no-color
       - id: plan
         run: tofu plan -out terraform.tfplan -detailed-exitcode -no-color
-        env:
-          TF_VAR_STACK_NAME: liamr-scoreboard
-          TF_VAR_TAGS_ALL: |
-            {"Environment": "Development", "Service": "Scorekeeping"}
       - if: steps.plan.outputs.exitcode == 2
         run: tofu apply -auto-approve -no-color terraform.tfplan
